@@ -1,0 +1,6 @@
+quarkus:
+    application:
+        name: "quarkus-application"
+    http:
+        port: 8081
+        root-path: "/api"
