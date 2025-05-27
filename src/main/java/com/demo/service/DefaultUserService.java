@@ -1,0 +1,62 @@
+package com.demo.service;
+
+import java.util.List;
+
+import com.demo.entity.User;
+import com.demo.exception.UserNotFoundException;
+import com.demo.repository.UserRepository;
+
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+
+@ApplicationScoped
+public class DefaultUserService implements UserService {
+    private final UserRepository userRepository;
+
+    @Inject
+    public DefaultUserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
+    @Override
+    public User getUserById(long id) throws UserNotFoundException {
+        try {
+            return userRepository.findByIdOptional(id)
+                    .orElseThrow(() -> new UserNotFoundException("There user doesn't exist"));
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @Override
+    public List<User> getUsers() {
+        return userRepository.listAll();
+    }
+
+    @Transactional
+    @Override
+    public User updateUser(long id, User user) throws UserNotFoundException {
+        User existingUser = getUserById(id);
+        existingUser.setFirstName(user.getFirstName());
+        existingUser.setLastName(user.getLastName());
+        existingUser.setEmail(user.getEmail());
+        userRepository.persist(existingUser);
+        return existingUser;
+    }
+
+    @Transactional
+    @Override
+    public User saveUser(User user) {
+        userRepository.persist(user);
+        return user;
+    }
+
+    @Transactional
+    @Override
+    public void deleteUser(long id) throws UserNotFoundException {
+        userRepository.delete(getUserById(id));
+    }
+
+}
