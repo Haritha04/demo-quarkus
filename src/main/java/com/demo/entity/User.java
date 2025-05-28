@@ -16,7 +16,6 @@ import jakarta.validation.constraints.Size;
 public class User implements Comparable<User> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonIgnore
     private int id;
     @Column(name = "first_name", nullable = false)
     @NotBlank
@@ -30,6 +29,14 @@ public class User implements Comparable<User> {
     @NotBlank
     @Size(max = 255)
     private String email;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getFirstName() {
         return firstName;
