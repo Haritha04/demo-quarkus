@@ -32,26 +32,26 @@ public class UserController {
     }
 
     @GET
-    public List<User> getUsers() {
-        return userService.getUsers();
+    public Response getUsers() {
+        return Response.ok(userService.getUsers()).build();
     }
 
     @GET
     @Path("/{id}")
-    public User getUserById(@PathParam("id") int id) throws UserNotFoundException {
-        return userService.getUserById(id);
+    public Response getUserById(@PathParam("id") int id) throws UserNotFoundException {
+        return Response.ok(userService.getUserById(id)).build();
     }
 
     @POST
     @Path("/create")
-    public User createUser(@Valid UserDTO userDto) {
-        return userService.saveUser(userDto.toUser());
+    public Response createUser(@Valid UserDTO userDto) {
+        return Response.ok(userService.saveUser(userDto.toUser())).build();
     }
 
     @PUT
     @Path("/{id}")
-    public User updateUser(@PathParam("id") int id, @Valid UserDTO userDTO) throws UserNotFoundException {
-        return userService.updateUser(id, userDTO.toUser());
+    public Response updateUser(@PathParam("id") int id, @Valid UserDTO userDTO) throws UserNotFoundException {
+        return Response.ok(userService.updateUser(id, userDTO.toUser())).build();
     }
 
     @DELETE

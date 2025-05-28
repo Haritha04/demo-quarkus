@@ -25,8 +25,7 @@ public class DefaultUserService implements UserService {
             return userRepository.findByIdOptional(id)
                     .orElseThrow(() -> new UserNotFoundException("There user doesn't exist"));
         } catch (UserNotFoundException e) {
-            e.printStackTrace();
-            return null;
+            throw new UserNotFoundException("There user doesn't exist");
         }
     }
 
