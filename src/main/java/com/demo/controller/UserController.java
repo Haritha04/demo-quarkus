@@ -1,11 +1,11 @@
 package com.demo.controller;
 
-import java.util.List;
-import com.demo.entity.User;
 import com.demo.exception.UserNotFoundException;
 import com.demo.model.UserDTO;
 import com.demo.service.UserService;
 
+import io.quarkus.security.identity.SecurityIdentity;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.Consumes;
@@ -27,17 +27,22 @@ public class UserController {
     private final UserService userService;
 
     @Inject
+    SecurityIdentity securityIdentity;
+
+    @Inject
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
     @GET
+    @RolesAllowed("testUser")
     public Response getUsers() {
         return Response.ok(userService.getUsers()).build();
     }
 
     @GET
     @Path("/{id}")
+    @RolesAllowed("testUser")
     public Response getUserById(@PathParam("id") int id) throws UserNotFoundException {
         return Response.ok(userService.getUserById(id)).build();
     }
@@ -60,5 +65,12 @@ public class UserController {
         userService.deleteUser(id);
         return Response.status(Response.Status.NO_CONTENT).build();
     }
+
+    // @GET("/test")
+    // @Produces(MediaType.TEXT_PLAIN)
+    // public String user() {
+    // return String.format("Granted standard user: %s",
+    // securityIdentity.getPrincipal().getName());
+    // }
 
 }
